@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 typedef enum {FALSE=0, TRUE= !FALSE} Bool;
 
 struct typeNode
@@ -26,7 +27,7 @@ struct typeStack
 
 typedef struct typeStack stack;
 
-static node *createNode(int ID, char *data)
+node *createNode(int ID, char *data)
 {
     node *n =(node*) malloc (sizeof(node));
     n->ID=ID;
@@ -84,13 +85,21 @@ void removeNode(stack *s)
     else
     {
         node *tmp = s->bottom;
-        int i;
-        for (i=0;i<(s->size)-1;i++)
+        if (s->size == 1)
         {
-            s->top=tmp;
-            tmp=tmp->next;
+            s->top=NULL;
+            s->bottom=NULL;
         }
-        s->top->next=NULL;
+        else
+        {
+            int i;
+            for (i=0;i<(s->size)-1;i++)
+            {
+                s->top=tmp;
+                tmp=tmp->next;
+            }
+            s->top->next=NULL;
+        }
         deleteNode(tmp);
         s->size-=1;
     }
@@ -125,10 +134,16 @@ int main ()
     insertNode(testStack,5,"I");
     printStack(testStack);
     removeNode(testStack);
-    removeNode(testStack);
-    removeNode(testStack);
-    removeNode(testStack);
+    printStack(testStack);
     removeNode(testStack);
     printStack(testStack);
+    removeNode(testStack);
+    printStack(testStack);
+    removeNode(testStack);
+    printStack(testStack);
+    removeNode(testStack);
+    insertNode(testStack,1000,"HOLA WE");
+    printStack(testStack);
+    removeNode(testStack);
     return 0;
 }
